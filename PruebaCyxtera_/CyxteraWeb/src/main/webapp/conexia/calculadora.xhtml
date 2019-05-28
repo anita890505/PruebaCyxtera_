@@ -1,0 +1,50 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/comf-template-menu2.xhtml">
+  	<ui:define name="head">:: CALCULADORA ::</ui:define>
+	<ui:define name="body">
+		<h:body>
+			<h:form >
+			<p:messages id="messages" globalOnly="true" autoUpdate="true" closable="true" showDetail="true" showSummary="true"/>
+				<p:tabView>
+        			<p:tab title="Calculadora">
+        				<div align="center">
+        					<p:panel style="width:1000px; height:600px" id="panelPuntoUno" header="Calcula">
+								<p:inputText id="Ape1Cliente" value="#{fact.numero}" style="width: 790px;; height:100px"/>
+								<br/><br/>
+	        					<p:panelGrid columns="4" style="width:800px; height:200px" id="panelRegistro" >
+										<p:commandButton value="1" action="#{fact.opera(1)}" update="@form"/>						
+										<p:commandButton value="2" action="#{fact.opera(2)}" update="@form"/>
+										<p:commandButton value="3" action="#{fact.opera(3)}" update="@form"/>
+										<p:commandButton value="+" action="#{fact.sigo('+')}" update="@form"/>
+										<p:commandButton value="4" action="#{fact.opera(4)}" update="@form"/>
+										<p:commandButton value="5" action="#{fact.opera(5)}" update="@form"/>
+										<p:commandButton value="6" action="#{fact.opera(6)}" update="@form"/>
+										<p:commandButton value="-" action="#{fact.sigo('-')}" update="@form"/>
+										<p:commandButton value="7" action="#{fact.opera(7)}" update="@form"/>
+										<p:commandButton value="8" action="#{fact.opera(8)}" update="@form"/>
+										<p:commandButton value="9" action="#{fact.opera(9)}" update="@form"/>
+										<p:commandButton value="*" action="#{fact.sigo('*')}" update="@form"/>
+										<p:commandButton value="" />
+										<p:commandButton value="0" action="#{fact.opera(0)}" update="@form"/>
+										<p:commandButton value="" />
+										<p:commandButton value="*" action="#{fact.sigo('/')}" update="@form"/>
+								</p:panelGrid>
+								<br/><br/>
+									<div align="center">
+										
+										<p:commandButton value="Resultado" action="#{fact.resultado()}" icon="ui-icon-extlink" update="@form"/>
+									</div>
+        					</p:panel>
+						</div>
+						<br/><br/>
+        			</p:tab>
+        			
+        		</p:tabView>
+			</h:form>
+		</h:body>
+	</ui:define>
+</ui:composition>

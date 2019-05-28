@@ -1,0 +1,90 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/comf-template-menu2.xhtml">
+  	<ui:define name="head">:: FACTURACION ::</ui:define>
+	<ui:define name="body">
+		<h:body>
+			<h:form >
+			<p:messages id="messages" globalOnly="true" autoUpdate="true" closable="true" showDetail="true" showSummary="true"/>
+				<div align="center">
+				<br /><br />
+					<h:outputLabel value="BIENVENIDO "/>#{prin.usLoged} <h:outputLabel value="AL SISTEMA DE Fqcturacion"/>
+				</div>
+				
+				<p:panel style="width:1100px; height:800px" id="panelBusqueda" header="#{msg.haderNombreCat}">
+					<div align="center">
+						<p:outputLabel for="nombreCate" value="#{msg.labelNombreCate}"/>
+						<p:inputText id="nombreCate" value="#{fact.nombreCategoria}"/>
+						<br/><br/>
+						<div align="center">
+							<p:commandButton value="#{msg.botonAceptar}" action="#{fact.buscarPoNombre()}" icon="ui-icon-extlink" update="@form,panelResul"/>
+							<p:commandButton value="#{msg.botonNuevo}" action="#{fact.abrirNuevo()}" icon="ui-icon-extlink" update="@form,panelResul"/>
+						</div>
+					</div>
+				</p:panel>
+				<p:panel style="width:1100px; height:800px" id="panelResul" header="#{msg.haderNombreCat}" visible="#{fact.verPanel}">
+					<p:dataTable var="datos" value="#{fact.categoriaProductos}" rows="10" paginator="true"
+	                	 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+	                 	rowsPerPageTemplate="5,10,15">
+	                 	<p:column headerText="#{msg.tabCod}">
+				            <h:outputText value="#{datos.codigo}" />
+				        </p:column>
+				 
+				        <p:column headerText="#{msg.tabCarac}">
+				            <h:outputText value="#{datos.caracteristica}" />
+				        </p:column>
+				 
+				        <p:column headerText="#{msg.tabNom}">
+				            <h:outputText value="#{datos.nombre}" />
+				        </p:column>
+				 
+				        <p:column headerText="#{msg.tabVer}"  >
+							<div align="center">
+								<p:commandButton action="#{fact.verEditarCategoria(datos)}" ajax="false" icon="ui-icon-extlink" update="@form,editCa"/>
+								<p:commandButton action="#{fact.borrarCategoria(datos)}" ajax="false" icon="ui-icon-extlink" update="@form"/>
+							</div>
+						</p:column>			 
+					</p:dataTable>
+				</p:panel>
+				<p:dialog header="#{msg.headerVerDer}" visible="#{fact.dialogCategoria}"  closable="false" modal="true" width="500" id="editCa">
+					<h:outputLabel value="#{msg.headerVerDer}"/><br />
+					<div align="center">
+						<p:panelGrid columns="3"  style="whit:920px; height:50"  id="resume">            
+						    <p:outputLabel value="#{msg.labelCod}" for="cod"/> 
+						    <p:inputText id="cod" value="#{fact.categoriaProductoEdit.codigo}"/>
+						    <p:outputLabel value="#{msg.labelCarac}" for="cara"/>
+						    <p:inputText value="#{fact.categoriaProductoEdit.caracteristica}" id="cara"/>
+						    <p:outputLabel value="#{msg.labelNom}" for="nomb"/>
+						    <p:inputText value="#{fact.categoriaProductoEdit.nombre}" id="nomb"/> 
+						</p:panelGrid>
+						<div align="center">
+							<p:commandButton value="#{msg.botonNuevo}" action="#{fact.crearCategoria()}" update="@form"></p:commandButton>
+							<p:commandButton value="#{msg.botonGuarddar}" action="#{fact.editarCategoria()}" update="@form"></p:commandButton>
+							<p:commandButton value="#{msg.botonSalir}" action="#{fact.cerrarDialogo()}" update="@form"></p:commandButton>
+						</div>
+					</div>
+				</p:dialog>
+				<p:dialog header="#{msg.headerVerDer}" visible="#{fact.dialogCategoriaNuevo}"  closable="false" modal="true" width="500">
+					<h:outputLabel value="#{msg.headerVerDer}"/><br />
+					<div align="center">
+						<p:panelGrid columns="2"  style="whit:920px; height:50"  id="datos1">            
+						    <p:outputLabel value="#{msg.labelCod}" for="code"/> 
+						    <p:inputText id="code" value="#{fact.categoriaProductoNuevo.codigo}"/>
+						    <p:outputLabel value="#{msg.labelCarac}" for="carae"/>
+						    <p:inputText value="#{fact.categoriaProductoNuevo.caracteristica}" id="carae"/>
+						    <p:outputLabel value="#{msg.labelNom}" for="nombe"/>
+						    <p:inputText value="#{fact.categoriaProductoNuevo.nombre}" id="nombe"/> 
+						</p:panelGrid>
+						<div align="center">
+							<p:commandButton value="#{msg.botonGuarddar}" action="#{fact.crearCategoria()}" update="@form"></p:commandButton>
+							<p:commandButton value="#{msg.botonSalir}" action="#{fact.cerrarNuevo()}" update="@form"></p:commandButton>
+						</div>
+					</div>
+				</p:dialog>
+			</h:form>
+		</h:body>
+	</ui:define>
+</ui:composition> 

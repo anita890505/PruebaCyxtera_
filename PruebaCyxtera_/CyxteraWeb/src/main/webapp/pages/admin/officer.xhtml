@@ -1,0 +1,168 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/comf-template-consultas.xhtml">
+	<ui:define name="head">:: GES ::</ui:define>
+	<ui:define name="body">
+		<h:body>
+			<h:form>
+				<p:messages id="messages" globalOnly="true" autoUpdate="true" closable="true" showDetail="true" showSummary="true" />
+				<br /> <br />
+				<div align="center">
+					<p:panel style="width:950px; height:500px" id="panelOfficer"
+						header="#{msg.headerOff}" visible="#{off.vPrin}">
+						<div align="center">
+							<p:dataTable id="offic" var="o" value="#{off.lisVf}" editable="true" style="margin-bottom:20px" emptyMessage="#{msg.labelNoReg}"
+										rows="10" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "	
+										rowsPerPageTemplate="5,10,15,20" ajax="false" filteredValue="#{off.offFilter}" binding="#{off.dtActuOff}">
+								<p:ajax event="rowEdit" listener="#{off.editarOfficer(o)}" update="offic" />
+								<p:column headerText="#{msg.labelTipiD}">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{o.tipoIdentificacion}" />
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText value="#{o.tipoIdentificacion}" style="width:100%" label="#{msg.labelTipiD}" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{msg.labelId}">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{o.identificacion}" />
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText value="#{o.identificacion}" style="width:100%" label="#{msg.labelId}" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{msg.labelFuncio}">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{o.funcionario}" />
+										</f:facet>
+										<f:facet name="input">
+												<p:inputText value="#{o.funcionario}" style="width:100%" label="#{msg.labelFuncio}" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{msg.labelUser}">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{o.usuario}" />
+									</f:facet>
+									<f:facet name="input">
+											<p:inputText value="#{o.usuario}" style="width:100%" label="#{msg.labelUser}" />
+									</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{msg.labelPerf}">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{o.perfil}" />
+										</f:facet>
+										<f:facet name="input">
+												<p:inputText value="#{o.perfil}" style="width:100%" label="#{msg.labelPerf}" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{msg.labelDep}">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{o.dependencia}" />
+										</f:facet>
+										<f:facet name="input">
+												<p:inputText value="#{o.dependencia}" style="width:100%" label="#{msg.labelDep}" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="#{msg.labelEditar}">
+									<p:rowEditor>
+									</p:rowEditor>
+								</p:column>
+							</p:dataTable>
+							<f:facet name="footer">
+							<div align="center">
+								<p:commandButton value="#{msg.botonGuarddar}" action="#{off.abrirPanel()}" update="panelOfficer,panelOfficerC" ajax="false"/>
+							</div>
+						</f:facet>
+						</div>
+					</p:panel>
+						<br/><br/>
+					<p:panel style="width:950px; height:500px" id="panelOfficerC" header="#{msg.headerOff}" visible="#{off.ventVer}">
+						<div align="center">
+							<h:panelGrid columns="4" style="whit:920px; height:320" cellspacing="6" cellpadding="6">
+								<p:outputLabel value="#{msg.labelTipId}" for="sid"/>
+								<p:selectOneMenu value="#{off.idtipo}" id="sid" style="width:150px">
+									<f:selectItem itemLabel="#{msg.labelSeleccione}" itemValue="0"/>
+									<f:selectItems value="#{ad.lisTi}" var="td" itemValue="#{td.id}" itemLabel="#{td.nombre}"/>
+								</p:selectOneMenu>
+								<p:outputLabel value="#{msg.labelIDent}" for="nit"/>
+								<p:inputText id="nit" maxlength="12"  style="width:150px;" value="#{off.nit}"/>
+								<p:outputLabel value="#{msg.labelNombr}" for="nore"/>
+								<p:inputText id="nore" maxlength="12"  style="width:150px;" value="#{off.per.nombre1}"/>
+								<p:outputLabel value="#{msg.labelNombr}" for="nombre2"/>
+								<p:inputText id="nombre2" maxlength="12"  style="width:150px;" value="#{off.per.nombre2}"/>
+								<p:outputLabel value="#{msg.labelApe}" for="apell"/>
+								<p:inputText id="apell" maxlength="12"  style="width:150px;" value="#{off.per.apellido1}"/>
+								<p:outputLabel value="#{msg.labelApe}" for="apell2"/>
+								<p:inputText id="apell2" maxlength="12"  style="width:150px;" value="#{off.per.apellido2}"/>
+								<p:outputLabel value="#{msg.labelFec}" for="fechaN"/>
+								<p:calendar id="fechaN" value="#{off.fechaNa}" showOn="button" pattern="dd-MM-yyyy" mask="true"  style="width: 150px;"/>
+								<p:outputLabel value="#{msg.labelCiud}" for="ciud"/>
+								<p:selectOneMenu value="#{off.per.ciudadnacimiento}" id="ciud" style="width:150px">
+									<f:selectItem itemLabel="#{msg.labelSeleccione}" itemValue="0"/>
+									<f:selectItems value="#{ad.ciud}" var="c" itemValue="#{c.id}" itemLabel="#{c.nombre}"/>
+								</p:selectOneMenu>
+								<p:outputLabel value="#{msg.labelEstC}" for="estc"/>
+								<p:selectOneMenu value="#{off.per.idestadocivil}" id="estc" style="width:150px">
+									<f:selectItem itemLabel="#{msg.labelSeleccione}" itemValue="0"/>
+									<f:selectItems value="#{ad.lisEstCi}" var="e" itemValue="#{e.id}" itemLabel="#{e.nombre}"/>
+								</p:selectOneMenu>
+								<p:outputLabel value="#{msg.labelSex}" for="sex"/>
+								<p:selectOneMenu value="#{off.per.idsexo}" id="sex" style="width:150px">
+									<f:selectItem itemLabel="#{msg.labelSeleccione}" itemValue="0"/>
+									<f:selectItems value="#{off.lisSex}" var="s" itemValue="#{s.id}" itemLabel="#{s.nombre}"/>
+								</p:selectOneMenu>
+								<p:outputLabel value="#{msg.labelPass}" for="pass"/>
+								<p:inputText id="pass" maxlength="12"  style="width:150px;" value="#{off.per.pasaporte}"/>
+								<p:outputLabel value="#{msg.labelFecV}" for="fechaVP"/>
+								<p:calendar id="fechaVP" value="#{off.feDateV}" showOn="button" pattern="dd-MM-yyyy" mask="true"  style="width: 150px;"/>
+								<p:outputLabel value="#{msg.labelDir}" for="dirU"/>
+								<p:inputText id="dirU" maxlength="30"  style="width:150px;" value="#{off.per.direccionusa}"/>
+								<p:outputLabel value="#{msg.labelEst}" for="estadU"/>
+								<p:selectOneMenu value="#{off.idEstado}" id="estadU" style="width:150px" >
+									<f:selectItem itemLabel="#{msg.labelSeleccione}" itemValue=""/>
+									<f:selectItems value="#{ad.listEstado}" var="es" itemValue="#{es.id}" itemLabel="#{es.nombre}"/>
+								</p:selectOneMenu>
+								<p:outputLabel value="#{msg.labelCiud}" for="ciudE"/>
+								<p:selectOneMenu value="#{off.per.ciudadusa}" id="ciudE" style="width: 150px;">
+									<f:selectItem itemLabel="#{msg['labelSeleccione']}" itemValue=""/>
+									<f:selectItems value="#{off.lisCiuE}" var="les" itemValue="#{les.codigoCiu}" itemLabel="qqq"/>
+								</p:selectOneMenu>
+								<p:outputLabel value="#{msg.labelZip}" for="czip"/>
+								<p:inputMask id="czip" mask="?9999" maxlength="5"  style="width:150px;" value="#{off.per.zipusa}"/>
+								<p:outputLabel value="#{msg.labelDirO}" for="diro"/>
+								<p:inputText id="diro" maxlength="30"  style="width:150px;" value="#{off.per.direccionorigen}"/>
+								<p:outputLabel value="#{msg.labelEst}" for="estai"/>
+								<p:selectOneMenu value="#{off.idEstadoO}" id="estai" style="width:150px" >
+									<f:selectItem itemLabel="#{msg.labelSeleccione}" itemValue="0"/>
+									<f:selectItems value="#{ad.listEstado}" var="es" itemValue="#{es.id}" itemLabel="#{es.nombre}"/>
+								</p:selectOneMenu>
+								<p:outputLabel value="#{msg.labelCiud}" for="ciudO"/>
+								<p:selectOneMenu value="#{off.per.ciudadorigen}" id="ciudO" style="width: 150px;">
+									<f:selectItem itemLabel="#{msg['labelSeleccione']}" itemValue="0"/>
+									<f:selectItems value="#{off.lisCiuEO}" var="leso" itemValue="#{leso.codigoCiu}" itemLabel="aa"/>
+								</p:selectOneMenu>
+								<p:outputLabel for="phone" value="#{msg.labelTel}" />
+        						<p:inputMask id="phone" value="#{off.per.telefono1}" mask="(999) 999-9999" style="width: 150px;"/>
+							</h:panelGrid>
+						</div>
+					</p:panel>
+				</div>
+			</h:form>
+		</h:body>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,514 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/comf-template-consultas.xhtml">
+	<ui:define name="head">:: GES ::</ui:define>
+	<ui:define name="body">
+		<h:body>
+			<h:form>
+				<p:messages id="messages" globalOnly="true" autoUpdate="true" closable="true" showDetail="true" showSummary="true" />
+				<br /> <br />
+				<div align="center">
+					<p:tabView>
+						<p:tab title="#{msg.headerPais}">
+							<p:panel style="width:950px; height:500px" id="panelGeneral" header="#{msg.headerPais}" >
+								<div align="center">
+									<p:outputLabel for="nume" value="Codigo Pais" />
+									<p:inputText id="nume" value="#{ad.num}" disabled="true"></p:inputText>
+									<p:outputLabel for="re2" value="#{msg.labelNombre}" />
+									<p:inputText id="re2" value="#{ad.nombre}" ></p:inputText> <br/>
+									<p:commandButton value="#{msg.botonGuarddar}" action="#{ad.create()}" update="panelGeneral,paised" ajax="false"/>
+									
+									<p:dataTable id="paised" var="pa" value="#{ad.listPais}" editable="true" style="margin-bottom:20px" emptyMessage="#{msg.labelNoReg}"
+										rows="10" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "	
+													 rowsPerPageTemplate="5,10,15,20" ajax="false">
+									   <p:ajax event="rowEdit" listener="#{ad.edit(pa)}" update="paised"/>
+									   <p:column headerText="#{msg.labelId}"  >
+													<h:outputText value="#{pa.id}" />
+										</p:column>
+								       <p:column headerText="#{msg.labelPais}">
+								           <p:cellEditor>
+								               <f:facet name="output"><h:outputText value="#{pa.nombre}" /></f:facet>
+								               <f:facet name="input"><p:inputText value="#{pa.nombre}" style="width:100%" label="#{msg.labelPais}"/></f:facet>
+								           </p:cellEditor>
+								       </p:column>
+								       <p:column headerText="#{msg.labelEditar}" >
+										<p:rowEditor>
+											</p:rowEditor> 
+									   </p:column>
+								   </p:dataTable>
+								</div>
+							</p:panel>
+						</p:tab>
+						<p:tab title="#{msg.headerCiudad}">
+							<p:panel style="width:950px; height:500px" id="panelG" header="#{msg.headerCiudad}" >
+								<div align="center">
+									<p:outputLabel for="codc" value="#{msg.labelCodCiudad}" />
+									<p:inputText id="codc" value="#{ad.codC}" disabled="true" style="width:150px"/>
+									<p:outputLabel for="no" value="#{msg.labelNombre}" style="width:150px"/>
+									<p:inputText id="no" value="#{ad.nomCiud}" ></p:inputText>
+									<p:outputLabel for="selCodEs" value="#{msg.labelEstado}" />
+									<p:selectOneMenu value="#{ad.codEsta}" id="selCodEs" style="width:150px">
+										<f:selectItem itemLabel="#{msg.labelSeleccione}" itemValue="0"/>
+										<f:selectItems value="#{ad.listEstado}" var="es" itemValue="#{es.id}" itemLabel="#{es.nombre}"/>
+									</p:selectOneMenu> <BR/> <BR />
+									<p:commandButton value="#{msg.botonGuarddar}" action="#{ad.crearCiudad()}" update="panelG,ciudT" ajax="false"/>
+									<p:dataTable id="ciudT" var="ciu" value="#{ad.ciud}" editable="true" style="margin-bottom:20px" emptyMessage="#{msg.labelNoReg}"
+										rows="10" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "	
+													 rowsPerPageTemplate="5,10,15,20" ajax="false" filteredValue="#{ad.contFilter}" binding="#{ad.dtActu}">
+									   <p:ajax event="rowEdit" listener="#{ad.editCiudad(ciu)}" update="ciudT"/>
+									   <p:column headerText="#{msg.labelId}"  >
+													<h:outputText value="#{ciu.id}" />
+										</p:column>
+								       <p:column headerText="#{msg.labelCiudad}" filterBy="#{ciu.nombre}" filterMatchMode="contains" >
+								           <p:cellEditor>
+								               <f:facet name="output"><h:outputText value="#{ciu.nombre}" /></f:facet>
+								               <f:facet name="input"><p:inputText value="#{ciu.nombre}" style="width:100%" label="#{msg.labelPais}"/></f:facet>
+								           </p:cellEditor>
+								       </p:column>
+								       <p:column headerText="#{msg.labelEst}">
+								           <p:cellEditor>
+								               <f:facet name="output"><h:outputText value="#{ciu.idestado}" /></f:facet>
+								               <f:facet name="input">
+								               		<p:selectOneMenu value="#{ciu.idestado}" style="width:150px">
+									               		<f:selectItem itemLabel="#{msg.labelSeleccione}" itemValue="0"/>
+														<f:selectItems value="#{ad.listEstado}" var="es" itemValue="#{es.id}" itemLabel="#{es.nombre}"/>
+								               		</p:selectOneMenu>
+								               </f:facet>
+								           </p:cellEditor>
+								       </p:column>
+								       <p:column headerText="#{msg.labelEditar}" >
+										<p:rowEditor>
+											</p:rowEditor> 
+									   </p:column>
+								   </p:dataTable>
+								</div>
+							</p:panel>
+						</p:tab>
+						<p:tab title="#{msg.headerEstado}">
+							<p:panel style="width:950px; height:500px" id="pEstado" header="#{msg.headerEstado}" >
+								<div align="center">
+									<p:outputLabel for="coe" value="#{msg.labelCod}" />
+									<p:inputText id="coe" value="#{ad.codEst}" disabled="true" style="width:150px"/>
+									<p:outputLabel for="nomb" value="#{msg.labelNombre}" style="width:150px"/>
+									<p:inputText id="nomb" value="#{ad.estado.nombre}" ></p:inputText>
+									<p:outputLabel for="abr" value="#{msg.labelAbre}" />
+									<p:inputText id="abr" value="#{ad.estado.abreviatura}" ></p:inputText>
+									<p:outputLabel for="selCodEs" value="#{msg.labelPais}" />
+									<p:selectOneMenu value="#{ad.estado.idpais}" id="selCodP" style="width:150px">
+										<f:selectItem itemLabel="#{msg.labelSeleccione}" itemValue="0"/>
+										<f:selectItems value="#{ad.listPais}" var="pa" itemValue="#{pa.id}" itemLabel="#{pa.nombre}"/>
+									</p:selectOneMenu> <BR/> <BR />
+									<p:commandButton value="#{msg.botonGuarddar}" action="#{ad.crearEstado()}" update="pEstado,tes" ajax="false"/>
+									<p:dataTable id="tes" var="et" value="#{ad.listEstado}" editable="true" style="margin-bottom:20px" emptyMessage="#{msg.labelNoReg}"
+										rows="10" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "	
+													 rowsPerPageTemplate="5,10,15,20" ajax="false" filteredValue="#{ad.estFilter}" binding="#{ad.dtActuE}">
+									   <p:ajax event="rowEdit" listener="#{ad.editEstado(et)}" update="tes"/>
+									   <p:column headerText="#{msg.labelIdE}"  >
+													<h:outputText value="#{et.id}" />
+										</p:column>
+								       <p:column headerText="#{msg.labelAbr}" filterBy="#{et.abreviatura}" filterMatchMode="contains" >
+								           <p:cellEditor>
+								               <f:facet name="output"><h:outputText value="#{et.abreviatura}" /></f:facet>
+								               <f:facet name="input"><p:inputText value="#{et.abreviatura}" style="width:100%" label="#{msg.labelAbre}"/></f:facet>
+								           </p:cellEditor>
+								       </p:column>
+								       <p:column headerText="#{msg.labelNombre}" filterBy="#{et.nombre}" filterMatchMode="contains" >
+								           <p:cellEditor>
+								               <f:facet name="output"><h:outputText value="#{et.nombre}" /></f:facet>
+								               <f:facet name="input"><p:inputText value="#{et.nombre}" style="width:100%" label="#{msg.labelNombre}"/></f:facet>
+								           </p:cellEditor>
+								       </p:column>
+								       <p:column headerText="#{msg.labelPais}">
+								           <p:cellEditor>
+								               <f:facet name="output"><h:outputText value="#{et.idpais}" /></f:facet>
+								               <f:facet name="input">
+								               		<p:selectOneMenu value="#{et.idpais}" style="width:150px">
+									               		<f:selectItem itemLabel="#{msg.labelSeleccione}" itemValue="0"/>
+														<f:selectItems value="#{ad.listPais}" var="pa" itemValue="#{pa.id}" itemLabel="#{pa.nombre}"/>
+								               		</p:selectOneMenu>
+								               </f:facet>
+								           </p:cellEditor>
+								       </p:column>
+								       <p:column headerText="#{msg.labelEditar}" >
+										<p:rowEditor>
+											</p:rowEditor> 
+									   </p:column>
+								   </p:dataTable>
+								</div>
+							</p:panel>
+						</p:tab>
+						<p:tab title="#{msg.headerZip}">
+							<p:panel style="width:950px; height:500px" id="panZip" header="#{msg.headerZip}" >
+								<div align="center">
+									<p:outputLabel for="coe" value="#{msg.labelCod}" />
+									<p:inputText id="codZ" value="#{ad.zipCod}" disabled="true" style="width:150px"/>
+									<p:outputLabel for="nombz" value="#{msg.labelZip}" style="width:150px"/>
+									<p:inputText id="nombz" value="#{ad.zip.zipcode}" ></p:inputText>
+									<BR/> <BR />
+									<p:commandButton value="#{msg.botonGuarddar}" action="#{ad.crearZip()}" update="panZip,tzip" ajax="false"/>
+									<p:dataTable id="tzip" var="zp" value="#{ad.lisZip}" editable="true" style="margin-bottom:20px" emptyMessage="#{msg.labelNoReg}"
+										rows="10" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "	
+													 rowsPerPageTemplate="5,10,15,20" ajax="false" filteredValue="#{ad.zipFilter}" binding="#{ad.dtActuZ}">
+									   <p:ajax event="rowEdit" listener="#{ad.editarZip(zp)}" update="tzip"/>
+									   <p:column headerText="#{msg.labelIdZ}"  >
+													<h:outputText value="#{zp.id}" />
+										</p:column>
+								       <p:column headerText="#{msg.labelCodZ}" filterBy="#{zp.zipcode}" filterMatchMode="contains" >
+								           <p:cellEditor>
+								               <f:facet name="output"><h:outputText value="#{zp.zipcode}" /></f:facet>
+								               <f:facet name="input"><p:inputText value="#{zp.zipcode}" style="width:100%" label="#{msg.labelCodZ}"/></f:facet>
+								           </p:cellEditor>
+								       </p:column>
+								       <p:column headerText="#{msg.labelEditar}" >
+										<p:rowEditor>
+											</p:rowEditor> 
+									   </p:column>
+								   </p:dataTable>
+								</div>
+							</p:panel>
+						</p:tab>
+						<p:tab title="#{msg.headerAnio}">
+							<p:panel style="width:950px; height:500px" id="panelTt" header="#{msg.headerAnio}" >
+								<div align="center">
+									<h:panelGrid columns="4" style="whit:920px; height:320">
+										<p:outputLabel for="idan" value="#{msg.labelId}" />
+										<p:inputText id="idan" value="#{ad.codAnio}" disabled="true"></p:inputText>
+										<p:outputLabel for="nan" value="#{msg.labelNombre}" />
+										<p:inputText id="nan" value="#{ad.an.nombre}" ></p:inputText>
+									</h:panelGrid>
+									<f:facet name="footer">
+										<div align="center">
+											<p:commandButton value="#{msg.botonGuarddar}" action="#{ad.crearAnio()}" update="panelTt,deAn" ajax="false"/>
+										</div>
+									</f:facet>
+									<p:dataTable id="deAn" var="ano" value="#{ad.lisAnio}" editable="true" style="margin-bottom:20px" emptyMessage="#{msg.labelNoReg}"
+										rows="10" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "	
+													 rowsPerPageTemplate="5,10,15,20" ajax="false" filteredValue="#{ad.anioFilter}" binding="#{ad.dtActuAn}">
+									   <p:ajax event="rowEdit" listener="#{ad.editarAnio(ano)}" update="deAn"/>
+									   <p:column headerText="#{msg.labelId}"  >
+													<h:outputText value="#{ano.id}" />
+										</p:column>
+								       <p:column headerText="#{msg.labelNombre}" filterBy="#{ano.nombre}" filterMatchMode="contains">
+								           <p:cellEditor>
+								               <f:facet name="output"><h:outputText value="#{ano.nombre}" /></f:facet>
+								               <f:facet name="input"><p:inputText value="#{ano.nombre}" style="width:100%" label="#{msg.labelNombre}"/></f:facet>
+								           </p:cellEditor>
+								       </p:column>
+								       <p:column headerText="#{msg.labelEditar}" >
+										<p:rowEditor>
+											</p:rowEditor> 
+									   </p:column>
+								   </p:dataTable>
+								</div>
+							</p:panel>
+						</p:tab>
+						<p:tab title="#{msg.headerPreg}">
+							<p:panel style="width:950px; height:500px" id="panelPr" header="#{msg.headerPreg}" >
+								<div align="center">
+									<h:panelGrid columns="4" style="whit:920px; height:320">
+										<p:outputLabel for="idpr" value="#{msg.labelId}" />
+										<p:inputText id="idpr" value="#{ad.codPreg}" disabled="true"></p:inputText>
+										<p:outputLabel for="npr" value="#{msg.labelPregunta}" />
+										<p:inputText id="npr" value="#{ad.pr.pregunta}" ></p:inputText>
+									</h:panelGrid>
+									<f:facet name="footer">
+										<div align="center">
+											<p:commandButton value="#{msg.botonGuarddar}" action="#{ad.crearPregunta()}" update="panelPr,dePr" ajax="false"/>
+										</div>
+									</f:facet>
+									<p:dataTable id="dePr" var="pre" value="#{ad.lisPreg}" editable="true" style="margin-bottom:20px" emptyMessage="#{msg.labelNoReg}"
+										rows="10" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "	
+													 rowsPerPageTemplate="5,10,15,20" ajax="false" filteredValue="#{ad.preFilter}" binding="#{ad.dtActuPr}">
+									   <p:ajax event="rowEdit" listener="#{ad.editarPregunta(pre)}" update="dePr"/>
+									   <p:column headerText="#{msg.labelId}"  >
+													<h:outputText value="#{pre.id}" />
+										</p:column>
+								       <p:column headerText="#{msg.labelPregunt}" filterBy="#{pre.pregunta}" filterMatchMode="contains">
+								           <p:cellEditor>
+								               <f:facet name="output"><h:outputText value="#{pre.pregunta}" /></f:facet>
+								               <f:facet name="input"><p:inputText value="#{pre.pregunta}" style="width:100%" label="#{msg.labelPregunt}"/></f:facet>
+								           </p:cellEditor>
+								       </p:column>
+								       <p:column headerText="#{msg.labelEditar}" >
+										<p:rowEditor>
+											</p:rowEditor> 
+									   </p:column>
+								   </p:dataTable>
+								</div>
+							</p:panel>
+						</p:tab>
+						<p:tab title="#{msg.labelParam}">
+							<p:panel style="width:950px; height:500px" id="panelPm" header="#{msg.labelParam}" >
+								<div align="center">
+									<h:panelGrid columns="4" style="whit:920px; height:320">
+										<p:outputLabel for="idpm" value="#{msg.labelId}" />
+										<p:inputText id="idpm" value="#{ad.codParam}" disabled="true"></p:inputText>
+										<p:outputLabel for="selCEP" value="#{msg.labelEstado}" />
+										<p:selectOneMenu value="#{ad.param.estado}" id="selCEP" style="width:150px">
+											<f:selectItem itemLabel="#{msg.labelSeleccione}" itemValue="0"/>
+											<f:selectItems value="#{estc.lienu}" var="l" itemValue="#{l.idComponente}" itemLabel="#{l.nombre}"/>
+										</p:selectOneMenu>
+										<p:outputLabel for="dir" value="#{msg.labelDireccion}" />
+										<p:inputText id="dir" value="#{ad.param.direccion}" ></p:inputText>
+										<p:outputLabel for="selICi" value="#{msg.labelCiudad}" />
+										<p:selectOneMenu value="#{ad.param.idciudadpobox}" id="selICi" style="width:150px">
+											<f:selectItem itemLabel="#{msg.labelSeleccione}" itemValue="0"/>
+											<f:selectItems value="#{ad.ciud}" var="c" itemValue="#{c.id}" itemLabel="#{c.nombre}"/>
+										</p:selectOneMenu>
+										<p:outputLabel for="selz" value="#{msg.labelZip}" />
+										<p:selectOneMenu value="#{ad.param.idzippobox}" id="selz" style="width:150px">
+											<f:selectItem itemLabel="#{msg.labelSeleccione}" itemValue="0"/>
+											<f:selectItems value="#{ad.lisZip}" var="z" itemValue="#{z.zipcode}" itemLabel="#{z.zipcode}"/>
+										</p:selectOneMenu>
+									</h:panelGrid>
+									<f:facet name="footer">
+										<div align="center">
+											<p:commandButton value="#{msg.botonGuarddar}" action="#{ad.crearParam()}" update="panelPm,dePa" ajax="false"/>
+										</div>
+									</f:facet>
+									<p:dataTable id="dePa" var="pm" value="#{ad.lisParam}" editable="true" style="margin-bottom:20px" emptyMessage="#{msg.labelNoReg}"
+										rows="10" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "	
+													 rowsPerPageTemplate="5,10,15,20" ajax="false" filteredValue="#{ad.paramFilter}" binding="#{ad.dtActuPm}">
+									   <p:ajax event="rowEdit" listener="#{ad.editarParam(pm)}" update="dePa"/>
+									   <p:column headerText="#{msg.labelId}"  >
+													<h:outputText value="#{pm.id}" />
+									   </p:column>
+								       <p:column headerText="#{msg.labelEstado}">
+								           <p:cellEditor>
+								               <f:facet name="output"><h:outputText value="#{pm.estado}" /></f:facet>
+								               <f:facet name="input">
+								               		<p:selectOneMenu value="#{pm.estado}" style="width:150px">
+									               		<f:selectItem itemLabel="#{msg.labelSeleccione}" itemValue="0"/>
+														<f:selectItems value="#{estc.lienu}" var="e" itemValue="#{e.idComponente}" itemLabel="#{e.nombre}"/>
+								               		</p:selectOneMenu>
+								               </f:facet>
+								           </p:cellEditor>
+								       </p:column>
+								       <p:column headerText="#{msg.labelDireccion}" filterBy="#{pm.direccion}" filterMatchMode="contains">
+								           <p:cellEditor>
+								               <f:facet name="output"><h:outputText value="#{pm.direccion}" /></f:facet>
+								               <f:facet name="input"><p:inputText value="#{pm.direccion}" style="width:100%" label="#{msg.labelDireccion}"/></f:facet>
+								           </p:cellEditor>
+								       </p:column>
+								       <p:column headerText="#{msg.labelCiudad}" filterBy="#{pm.idciudadpobox}" filterMatchMode="contains">
+								           <p:cellEditor>
+								               <f:facet name="output"><h:outputText value="#{pm.idciudadpobox}" /></f:facet>
+								               <f:facet name="input">
+								               		<p:selectOneMenu value="#{pm.idciudadpobox}" style="width:150px">
+									               		<f:selectItem itemLabel="#{msg.labelSeleccione}" itemValue="0"/>
+														<f:selectItems value="#{ad.ciud}" var="c" itemValue="#{c.id}" itemLabel="#{c.nombre}"/>
+								               		</p:selectOneMenu>
+								               </f:facet>
+								           </p:cellEditor>
+								       </p:column>
+								        <p:column headerText="#{msg.labelZip}" filterBy="#{pm.idzippobox}" filterMatchMode="contains">
+								           <p:cellEditor>
+								               <f:facet name="output"><h:outputText value="#{pm.idzippobox}" /></f:facet>
+								                <f:facet name="input">
+								               		<p:selectOneMenu value="#{pm.idzippobox}" style="width:150px">
+									               		<f:selectItem itemLabel="#{msg.labelSeleccione}" itemValue="0"/>
+														<f:selectItems value="#{ad.lisZip}" var="z" itemValue="#{z.zipcode}" itemLabel="#{z.zipcode}"/>
+								               		</p:selectOneMenu>
+								               </f:facet>
+								           </p:cellEditor>
+								       </p:column>
+								       <p:column headerText="#{msg.labelEditar}" >
+										<p:rowEditor>
+											</p:rowEditor> 
+									   </p:column>
+								   </p:dataTable>
+								</div>
+							</p:panel>
+						</p:tab>
+						<p:tab title="#{msg.headerPerfil}">
+							<p:panel style="width:950px; height:500px" id="panelPef" header="#{msg.headerPerfil}" >
+								<div align="center">
+									<h:panelGrid columns="4" style="whit:920px; height:320">
+										<p:outputLabel for="idpf" value="#{msg.labelId}" />
+										<p:inputText id="idpf" value="#{ad.codPerf}" disabled="true"></p:inputText>
+										<p:outputLabel for="npf" value="#{msg.labelNombre}" />
+										<p:inputText id="npf" value="#{ad.perf.nombre}" ></p:inputText>
+										<p:outputLabel for="ndf" value="#{msg.labelDescripcion}" />
+										<p:inputText id="ndf" value="#{ad.perf.descripcion}" ></p:inputText>
+									</h:panelGrid>
+									<f:facet name="footer">
+										<div align="center">
+											<p:commandButton value="#{msg.botonGuarddar}" action="#{ad.crearPerfil()}" update="panelPef,dePef" ajax="false"/>
+										</div>
+									</f:facet>
+									<p:dataTable id="dePef" var="pef" value="#{ad.lisPerf}" editable="true" style="margin-bottom:20px" emptyMessage="#{msg.labelNoReg}"
+										rows="10" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "	
+													 rowsPerPageTemplate="5,10,15,20" ajax="false" filteredValue="#{ad.perfFilter}" binding="#{ad.dtActuPf}">
+									   <p:ajax event="rowEdit" listener="#{ad.editarPerfil(pef)}" update="dePef"/>
+									   <p:column headerText="#{msg.labelId}"  >
+													<h:outputText value="#{pef.id}" />
+										</p:column>
+								       <p:column headerText="#{msg.labelNombre}" filterBy="#{pef.nombre}" filterMatchMode="contains">
+								           <p:cellEditor>
+								               <f:facet name="output"><h:outputText value="#{pef.nombre}" /></f:facet>
+								               <f:facet name="input"><p:inputText value="#{pef.nombre}" style="width:100%" label="#{msg.labelNombre}"/></f:facet>
+								           </p:cellEditor>
+								       </p:column>
+								       <p:column headerText="#{msg.labelDesc}" filterBy="#{pef.descripcion}" filterMatchMode="contains">
+								           <p:cellEditor>
+								               <f:facet name="output"><h:outputText value="#{pef.descripcion}" /></f:facet>
+								               <f:facet name="input"><p:inputText value="#{pef.descripcion}" style="width:100%" label="#{msg.labelDesc}"/></f:facet>
+								           </p:cellEditor>
+								       </p:column>
+								       <p:column headerText="#{msg.labelEditar}" >
+										<p:rowEditor>
+											</p:rowEditor> 
+									   </p:column>
+								   </p:dataTable>
+								</div>
+							</p:panel>
+						</p:tab>
+						<p:tab title="#{msg.headerEstCivi}">
+							<p:panel style="width:950px; height:500px" id="panelEstCivi" header="#{msg.headerEstCivi}" >
+								<div align="center">
+									<h:panelGrid columns="4" style="whit:920px; height:320">
+										<p:outputLabel for="idestc" value="#{msg.labelId}" />
+										<p:inputText id="idestc" value="#{ad.codEstCiv}" disabled="true"></p:inputText>
+										<p:outputLabel for="nestc" value="#{msg.labelNombre}" />
+										<p:inputText id="nestc" value="#{ad.ec.nombre}" ></p:inputText>
+									</h:panelGrid>
+									<f:facet name="footer">
+										<div align="center">
+											<p:commandButton value="#{msg.botonGuarddar}" action="#{ad.crearEstadoCivil()}" update="panelEstCivi,deEstC" ajax="false"/>
+										</div>
+									</f:facet>
+									<p:dataTable id="deEstC" var="estci" value="#{ad.lisEstCi}" editable="true" style="margin-bottom:20px" emptyMessage="#{msg.labelNoReg}"
+										rows="10" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "	
+													 rowsPerPageTemplate="5,10,15,20" ajax="false" filteredValue="#{ad.estCiFilter}" binding="#{ad.dtActuEstC}">
+									   <p:ajax event="rowEdit" listener="#{ad.editarEstadoCivil(estci)}" update="deEstC"/>
+									   <p:column headerText="#{msg.labelId}"  >
+													<h:outputText value="#{estci.id}" />
+										</p:column>
+								       <p:column headerText="#{msg.labelNombre}" filterBy="#{estci.nombre}" filterMatchMode="contains">
+								           <p:cellEditor>
+								               <f:facet name="output"><h:outputText value="#{estci.nombre}" /></f:facet>
+								               <f:facet name="input"><p:inputText value="#{estci.nombre}" style="width:100%" label="#{msg.labelNombre}"/></f:facet>
+								           </p:cellEditor>
+								       </p:column>
+								       <p:column headerText="#{msg.labelEditar}" >
+										<p:rowEditor>
+											</p:rowEditor> 
+									   </p:column>
+								   </p:dataTable>
+								</div>
+							</p:panel>
+						</p:tab>
+						<p:tab title="#{msg.headerTi}">
+							<p:panel style="width:950px; height:500px" id="panelTiden" header="#{msg.headerTi}" >
+								<div align="center">
+									<h:panelGrid columns="4" style="whit:920px; height:320">
+										<p:outputLabel for="itid" value="#{msg.labelId}" />
+										<p:inputText id="itid" value="#{ad.codTi}" disabled="true"></p:inputText>
+										<p:outputLabel for="ntid" value="#{msg.labelNombre}" />
+										<p:inputText id="ntid" value="#{ad.ti.nombre}" ></p:inputText>
+									</h:panelGrid>
+									<f:facet name="footer">
+										<div align="center">
+											<p:commandButton value="#{msg.botonGuarddar}" action="#{ad.crearTipoIden()}" update="panelTiden,dttid" ajax="false"/>
+										</div>
+									</f:facet>
+									<p:dataTable id="dttid" var="tiden" value="#{ad.lisTi}" editable="true" style="margin-bottom:20px" emptyMessage="#{msg.labelNoReg}"
+										rows="10" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "	
+													 rowsPerPageTemplate="5,10,15,20" ajax="false" filteredValue="#{ad.tiFilter}" binding="#{ad.dtActuTi}">
+									   <p:ajax event="rowEdit" listener="#{ad.editarTipoIden(tiden)}" update="dttid"/>
+									   <p:column headerText="#{msg.labelId}"  >
+													<h:outputText value="#{tiden.id}" />
+										</p:column>
+								       <p:column headerText="#{msg.labelNombre}" filterBy="#{tiden.nombre}" filterMatchMode="contains">
+								           <p:cellEditor>
+								               <f:facet name="output"><h:outputText value="#{tiden.nombre}" /></f:facet>
+								               <f:facet name="input"><p:inputText value="#{tiden.nombre}" style="width:100%" label="#{msg.labelNombre}"/></f:facet>
+								           </p:cellEditor>
+								       </p:column>
+								       <p:column headerText="#{msg.labelEditar}" >
+										<p:rowEditor>
+											</p:rowEditor> 
+									   </p:column>
+								   </p:dataTable>
+								</div>
+							</p:panel>
+						</p:tab>
+						<p:tab title="#{msg.headerFe}">
+							<p:panel style="width:950px; height:500px" id="panelFoEn" header="#{msg.headerFe}" >
+								<div align="center">
+									<h:panelGrid columns="4" style="whit:920px; height:320">
+										<p:outputLabel for="fen" value="#{msg.labelId}" />
+										<p:inputText id="fen" value="#{ad.codFe}" disabled="true"></p:inputText>
+										<p:outputLabel for="nfe" value="#{msg.labelNombre}" />
+										<p:inputText id="nfe" value="#{ad.fe.nombre}" ></p:inputText>
+									</h:panelGrid>
+									<f:facet name="footer">
+										<div align="center">
+											<p:commandButton value="#{msg.botonGuarddar}" action="#{ad.crearFormaEnvio()}" update="panelFoEn,dtfe" ajax="false"/>
+										</div>
+									</f:facet>
+									<p:dataTable id="dtfe" var="lfe" value="#{ad.lisFe}" editable="true" style="margin-bottom:20px" emptyMessage="#{msg.labelNoReg}"
+										rows="10" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "	
+													 rowsPerPageTemplate="5,10,15,20" ajax="false" filteredValue="#{ad.feFilter}" binding="#{ad.dtActuFe}">
+									   <p:ajax event="rowEdit" listener="#{ad.editarFormaEnvio(lfe)}" update="dtfe"/>
+									   <p:column headerText="#{msg.labelId}"  >
+													<h:outputText value="#{lfe.id}" />
+										</p:column>
+								       <p:column headerText="#{msg.labelNombre}" filterBy="#{lfe.nombre}" filterMatchMode="contains">
+								           <p:cellEditor>
+								               <f:facet name="output"><h:outputText value="#{lfe.nombre}" /></f:facet>
+								               <f:facet name="input"><p:inputText value="#{lfe.nombre}" style="width:100%" label="#{msg.labelNombre}"/></f:facet>
+								           </p:cellEditor>
+								       </p:column>
+								       <p:column headerText="#{msg.labelEditar}" >
+										<p:rowEditor>
+											</p:rowEditor> 
+									   </p:column>
+								   </p:dataTable>
+								</div>
+							</p:panel>
+						</p:tab>
+						<p:tab title="#{msg.headerEf}">
+							<p:panel style="width:950px; height:500px" id="panelEsFc" header="#{msg.headerEf}" >
+								<div align="center">
+									<h:panelGrid columns="4" style="whit:920px; height:320">
+										<p:outputLabel for="efen" value="#{msg.labelId}" />
+										<p:inputText id="efen" value="#{ad.codEfc}" disabled="true"></p:inputText>
+										<p:outputLabel for="ncfe" value="#{msg.labelNombre}" />
+										<p:inputText id="ncfe" value="#{ad.efc.nombre}" ></p:inputText>
+									</h:panelGrid>
+									<f:facet name="footer">
+										<div align="center">
+											<p:commandButton value="#{msg.botonGuarddar}" action="#{ad.crearEstadoFacrura()}" update="panelEsFc,dtEFC" ajax="false"/>
+										</div>
+									</f:facet>
+									<p:dataTable id="dtEFC" var="efg" value="#{ad.lisefc}" editable="true" style="margin-bottom:20px" emptyMessage="#{msg.labelNoReg}"
+										rows="10" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "	
+													 rowsPerPageTemplate="5,10,15,20" ajax="false" filteredValue="#{ad.efcFilter}" binding="#{ad.dtActuEfc}">
+									   <p:ajax event="rowEdit" listener="#{ad.editarEstadoFacrura(efg)}" update="dtEFC"/>
+									   <p:column headerText="#{msg.labelId}">
+													<h:outputText value="#{efg.id}" />
+										</p:column>
+								       <p:column headerText="#{msg.labelNombre}" filterBy="#{efg.nombre}" filterMatchMode="contains">
+								           <p:cellEditor>
+								               <f:facet name="output"><h:outputText value="#{efg.nombre}" /></f:facet>
+								               <f:facet name="input"><p:inputText value="#{efg.nombre}" style="width:100%" label="#{msg.labelNombre}"/></f:facet>
+								           </p:cellEditor>
+								       </p:column>
+								       <p:column headerText="#{msg.labelEditar}" >
+										<p:rowEditor>
+											</p:rowEditor> 
+									   </p:column>
+								   </p:dataTable>
+								</div>
+							</p:panel>
+						</p:tab>
+					</p:tabView>
+				</div>
+			</h:form>
+		</h:body>
+	</ui:define>
+</ui:composition>
